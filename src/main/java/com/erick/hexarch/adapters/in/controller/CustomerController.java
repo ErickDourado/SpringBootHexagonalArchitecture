@@ -3,6 +3,7 @@ package com.erick.hexarch.adapters.in.controller;
 import com.erick.hexarch.adapters.in.controller.mapper.CustomerMapper;
 import com.erick.hexarch.adapters.in.controller.request.CustomerRequest;
 import com.erick.hexarch.adapters.in.controller.response.CustomerResponse;
+import com.erick.hexarch.application.ports.in.DeleteCustomerByIdInputPort;
 import com.erick.hexarch.application.ports.in.FindCustomerByIdInputPort;
 import com.erick.hexarch.application.ports.in.InsertCustomerInputPort;
 import com.erick.hexarch.application.ports.in.UpdateCustomerInputPort;
@@ -27,6 +28,9 @@ public class CustomerController {
     private UpdateCustomerInputPort updateCustomerInputPort;
 
     @Autowired
+    private DeleteCustomerByIdInputPort deleteCustomerByIdInputPort;
+
+    @Autowired
     private CustomerMapper customerMapper;
 
     @PostMapping
@@ -47,6 +51,12 @@ public class CustomerController {
         var customerDomain = customerMapper.toCustomer(customerRequest);
         customerDomain.setId(id);
         updateCustomerInputPort.update(customerDomain, customerRequest.getZipCode());
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable String id) {
+        deleteCustomerByIdInputPort.delete(id);
         return ResponseEntity.noContent().build();
     }
 
