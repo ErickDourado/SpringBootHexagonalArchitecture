@@ -1,0 +1,29 @@
+package com.erick.hexarch.application.core.usecase;
+
+import com.erick.hexarch.application.core.domain.Customer;
+import com.erick.hexarch.application.ports.in.FindCustomerByIdInputPort;
+import com.erick.hexarch.application.ports.out.FindAddressByZipCodeOutputPort;
+import com.erick.hexarch.application.ports.out.UpdateCustomerOutputPort;
+
+public class UpdateCustomerUseCase {
+
+    private final FindCustomerByIdInputPort findCustomerByIdInputPort;
+    private final FindAddressByZipCodeOutputPort findAddressByZipCodeOutputPort;
+    private final UpdateCustomerOutputPort updateCustomerOutputPort;
+
+    public UpdateCustomerUseCase(FindCustomerByIdInputPort findCustomerByIdInputPort,
+                                 FindAddressByZipCodeOutputPort findAddressByZipCodeOutputPort,
+                                 UpdateCustomerOutputPort updateCustomerOutputPort) {
+        this.findCustomerByIdInputPort = findCustomerByIdInputPort;
+        this.findAddressByZipCodeOutputPort = findAddressByZipCodeOutputPort;
+        this.updateCustomerOutputPort = updateCustomerOutputPort;
+    }
+
+    public void update(Customer customer, String zipCode) {
+        findCustomerByIdInputPort.find(customer.getId());
+        var address = findAddressByZipCodeOutputPort.find(zipCode);
+        customer.setAddress(address);
+        updateCustomerOutputPort.update(customer);
+    }
+
+}
